@@ -8,7 +8,7 @@ Use este arquivo para anotar ideias para mecânicas, história ou funcionalidade
 - [ ] Sistema de inventário?
 - [ ] 5 habilidades: sorte, força, agilidade, magia, persuasão
 - Mapa pequeno vai se desbloqueando conforme o jogador avança na história
-- Jogador no meio do mapa vai se movendo para os lados? ou ele vai se movendo para os lados do mapa?
+- [x] **Sistema de Mapa**: Áreas interconectadas (estilo Stardew Valley/Zelda). O jogador anda até a borda e carrega a próxima área (definido em `docs/architecture.md`).
 
 ## Ideias de História
 O jogador é um mercenário daqueles bem práticos: não tem código de honra, não tem bandeira, só tem bolso. E o bolso vive vazio. A aventura começa quando ele chega num reino que tá caindo aos pedaços — guerras internas, monstros aparecendo onde não deveriam, gente sumindo, tudo aquele pacote clássico de “cuidado onde pisa”.

@@ -22,6 +22,16 @@ Entidades representam objetos dinâmicos no mundo do jogo.
 O mundo do jogo é construído usando um sistema baseado em tiles.
 - **`TileMap`**: Gerencia a grade de tiles que compõem o nível.
 
+### Sistema de Mapas e Áreas
+O jogo utiliza um sistema de áreas interconectadas (estilo Zelda clássico ou Stardew Valley).
+- **Estrutura**: Cada área é um arquivo de texto separado (ex: `vila.txt`, `floresta.txt`).
+- **Warps (Transições)**: As conexões entre áreas são definidas dentro do próprio arquivo da área.
+  - Um Warp define: Coordenada de origem (X, Y), Arquivo de destino, e Coordenada de destino na nova área.
+- **Funcionamento**:
+  1. O `TileMap` carrega o arquivo `.txt`.
+  2. O jogo verifica se o jogador pisou em um tile de Warp.
+  3. Se sim, o mapa atual é descarregado e o novo mapa é carregado, posicionando o jogador na coordenada de destino.
+
 ### Física e Colisão (`src/collision/`)
 - **`CollisionSystem`**: Lida com detecção e resolução de colisão entre entidades e o mapa de tiles.
 
