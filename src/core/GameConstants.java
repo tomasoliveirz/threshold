@@ -9,7 +9,7 @@ public final class GameConstants {
     // TILE SYSTEM
     // =====================================================
     
-    public static final int TILE_SIZE = 32;
+    public static final int TILE_SIZE = 64;
     
     // =====================================================
     // SCREEN
