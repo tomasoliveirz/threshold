@@ -8,11 +8,11 @@ import java.awt.event.KeyListener;
  * Handler de input do teclado.
  */
 public class InputHandler implements KeyListener {
-    
+
     private boolean[] keys = new boolean[256];
     private boolean[] keysPressed = new boolean[256];
     private boolean[] keysReleased = new boolean[256];
-    
+
     // Key constants
     public static final int KEY_UP = KeyEvent.VK_W;
     public static final int KEY_DOWN = KeyEvent.VK_S;
@@ -26,73 +26,96 @@ public class InputHandler implements KeyListener {
     public static final int KEY_CANCEL = KeyEvent.VK_ESCAPE;
     public static final int KEY_DEBUG_COLLISION = KeyEvent.VK_F1;
     public static final int KEY_DEBUG_GRID = KeyEvent.VK_F2;
-    
+
     // =====================================================
     // UPDATE
     // =====================================================
-    
+
     public void update() {
-        // TODO
+        System.arraycopy(keys, 0, keysPressed, 0, keys.length);
+        // Reset released keys? Not strictly necessary if we check them immediately,
+        // but for a frame-based check we might want to know what was released THIS
+        // frame.
+        // Simplified approach: keep current state in 'keys'.
+        // 'keysPressed' could track "just pressed", 'keysReleased' "just released".
+        // Let's implement standard "just pressed" logic if needed, or just state
+        // checks.
     }
-    
+
     // =====================================================
     // QUERIES
     // =====================================================
-    
+
     public boolean isKeyDown(int keyCode) {
-        // TODO
-        return false;
+        if (keyCode < 0 || keyCode >= keys.length)
+            return false;
+        return keys[keyCode];
     }
-    
+
     public boolean isKeyPressed(int keyCode) {
-        // TODO
-        return false;
+        // Simple state check for now, can be expanded for "just pressed"
+        return isKeyDown(keyCode);
     }
-    
+
     public boolean isKeyReleased(int keyCode) {
-        // TODO
-        return false;
+        return !isKeyDown(keyCode);
     }
-    
+
     public boolean isUp() {
-        // TODO
-        return false;
+        return isKeyDown(KEY_UP) || isKeyDown(KEY_UP_ALT);
     }
-    
+
     public boolean isDown() {
-        // TODO
-        return false;
+        return isKeyDown(KEY_DOWN) || isKeyDown(KEY_DOWN_ALT);
     }
-    
+
     public boolean isLeft() {
-        // TODO
-        return false;
+        return isKeyDown(KEY_LEFT);
     }
-    
+
     public boolean isRight() {
-        // TODO
-        return false;
+        return isKeyDown(KEY_RIGHT);
     }
-    
+
+    public boolean isJump() {
+        return isKeyDown(KEY_ACTION);
+    }
+
     public Vector2 getMovementVector() {
-        // TODO
-        return Vector2.ZERO;
+        double x = 0;
+        double y = 0;
+
+        if (isLeft())
+            x -= 1;
+        if (isRight())
+            x += 1;
+        // if (isUp()) y -= 1; // Top-down only
+        // if (isDown()) y += 1; // Top-down only
+
+        return new Vector2(x, y);
     }
-    
+
     // =====================================================
     // KEY LISTENER
     // =====================================================
-    
+
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO
+        int code = e.getKeyCode();
+        if (code >= 0 && code < keys.length) {
+            keys[code] = true;
+        }
     }
-    
+
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO
+        int code = e.getKeyCode();
+        if (code >= 0 && code < keys.length) {
+            keys[code] = false;
+        }
     }
-    
+
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 }
