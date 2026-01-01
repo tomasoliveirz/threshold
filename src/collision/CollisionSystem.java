@@ -30,9 +30,6 @@ public class CollisionSystem {
         return tileMap;
     }
 
-    // =====================================================
-    // MAIN COLLISION
-    // =====================================================
 
     // =====================================================
     // MAIN COLLISION
@@ -173,22 +170,7 @@ public class CollisionSystem {
     // =====================================================
 
     public List<Tile> getCollidingTiles(CollisionBox box) {
-        // Need to implement getSolidTileObjectsIn in TileMap if we want usage
-        // For now return empty list or implement simplified
         return tileMap.getSolidTileObjectsIn(box);
     }
 
-    public boolean isPointSolid(double x, double y) {
-        // TODO
-        return false;
-    }
-
-    public boolean isPointSolid(Vector2 point) {
-        return isPointSolid(point.x, point.y);
-    }
-
-    public Tile raycast(Vector2 origin, Vector2 direction, double maxDist) {
-        // TODO (avançado)
-        return null;
-    }
 }

@@ -1,7 +1,8 @@
 package level;
 
-import core.GameConstants;
+import entity.Entity;
 import entity.Player;
+import level.levelObjects.SolidWall;
 import tiles.TileMap;
 import tiles.TileType;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LevelLoader {
@@ -16,16 +18,21 @@ public class LevelLoader {
     public static class LevelData {
         public TileMap tileMap;
         public Player player;
+        public List<Entity> entities;
 
-        public LevelData(TileMap tileMap, Player player) {
+        public LevelData(TileMap tileMap, Player player, List<Entity> entities) {
             this.tileMap = tileMap;
             this.player = player;
+            this.entities = entities;
         }
     }
 
     public static LevelData loadLevel(String filePath) {
         TileMap tileMap = null;
         Player player = null;
+        List<Entity> entities = new ArrayList<>();
+
+        ObjectFactory objectFactory = new ObjectFactory();
 
         try {
             Path path = Paths.get(filePath);
@@ -36,31 +43,31 @@ public class LevelLoader {
 
             List<String> lines = Files.readAllLines(path);
 
-            // Determine dimensions
-            int height = 0;
-            int width = 0;
-
-            // Filter out metadata or empty lines if any (for now assuming raw map or simple
-            // header skipping)
-            // The user's file has headers "WIDTH: 20", "HEIGHT: 15". We should handle that
-            // or ignore it.
-            // The previous code treated everything as map. The new file has headers.
-            // Let's parse properly.
-
-            // Simple robust parser:
-            // 1. Calculate max width of lines that start with '#' or '.'
-            // 2. Count such lines for height
-
             int startLineIndex = 0;
+            int width = 0;
+            int height = 0;
+
+            // Pre-calculate dimensions
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i).trim();
-                if (line.startsWith("#") || line.startsWith(".")) {
+                // Treat any line with mapped chars (e.g. #, ., G, P) as map line.
+                // Simple heuristic: if line contains keys from our factory?
+                // Or just keep existing heuristics: start with # or .
+                // But now we have G and P.
+                // Let's assume if it's not a header (key: value), it's a map line?
+                // Safest is to just check max length.
+                if (line.isEmpty())
+                    continue;
+
+                // If it looks like a map line (contains map characters)
+                if (line.contains("#") || line.contains(".") || line.contains("P")) {
                     if (line.length() > width)
                         width = line.length();
                     height++;
-                } else if (width == 0) {
-                    // Still looking for map start
-                    startLineIndex++;
+                } else {
+                    // Maybe metadata lines before map
+                    if (height == 0)
+                        startLineIndex++;
                 }
             }
 
@@ -69,17 +76,26 @@ public class LevelLoader {
             int mapY = 0;
             for (int i = startLineIndex; i < lines.size(); i++) {
                 String line = lines.get(i);
-                // Basic check if it's a map line
-                if (!line.startsWith("#") && !line.startsWith("."))
+                // Basic skip empty or pure metadata lines inside body if needed
+                if (line.trim().isEmpty())
                     continue;
 
                 for (int x = 0; x < line.length(); x++) {
                     char c = line.charAt(x);
-                    if (c == '#') {
+
+                    // Factory Logic
+                    Object obj = objectFactory.createObject(c, x, mapY);
+
+                    if (obj instanceof SolidWall) {
                         tileMap.setTile(TileMap.LAYER_WALL, x, mapY, TileType.WALL);
-                    } else if (c == 'P') {
-                        player = new Player(x * GameConstants.TILE_SIZE, mapY * GameConstants.TILE_SIZE);
+                    } else if (obj instanceof Player) {
+                        player = (Player) obj;
+                    } else if (obj instanceof Entity) {
+                        entities.add((Entity) obj);
                     }
+                    // Handle default/empty char '.' or unknown?
+                    // if c == '#', factory returns SolidWall, we set Tile.
+                    // If c == '.', factory returns null (default).
                 }
                 mapY++;
             }
@@ -89,6 +105,6 @@ public class LevelLoader {
             return null;
         }
 
-        return new LevelData(tileMap, player);
+        return new LevelData(tileMap, player, entities);
     }
 }

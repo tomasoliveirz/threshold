@@ -11,7 +11,6 @@ public class InputHandler implements KeyListener {
 
     private boolean[] keys = new boolean[256];
     private boolean[] keysPressed = new boolean[256];
-    private boolean[] keysReleased = new boolean[256];
 
     // Key constants
     public static final int KEY_UP = KeyEvent.VK_W;
@@ -33,13 +32,6 @@ public class InputHandler implements KeyListener {
 
     public void update() {
         System.arraycopy(keys, 0, keysPressed, 0, keys.length);
-        // Reset released keys? Not strictly necessary if we check them immediately,
-        // but for a frame-based check we might want to know what was released THIS
-        // frame.
-        // Simplified approach: keep current state in 'keys'.
-        // 'keysPressed' could track "just pressed", 'keysReleased' "just released".
-        // Let's implement standard "just pressed" logic if needed, or just state
-        // checks.
     }
 
     // =====================================================

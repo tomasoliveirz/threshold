@@ -42,10 +42,6 @@ public class Game extends JPanel implements ActionListener {
     // INIT
     // =====================================================
 
-    // =====================================================
-    // INIT
-    // =====================================================
-
     private void init() {
         entities = new ArrayList<>();
         inputHandler = new InputHandler();
@@ -163,11 +159,7 @@ public class Game extends JPanel implements ActionListener {
 
     private void renderHUD(Graphics2D g) {
         g.setColor(Color.WHITE);
-        g.drawString("Entities: " + entities.size(), 10, 20);
-    }
-
-    private void renderDebug(Graphics2D g) {
-        // TODO
+        g.drawString("Chegue a parte verde e ganhe!", 10, 20);
     }
 
     // =====================================================
@@ -175,7 +167,7 @@ public class Game extends JPanel implements ActionListener {
     // =====================================================
 
     private void createTestMap() {
-        level.LevelLoader.LevelData data = level.LevelLoader.loadLevel("res/maps/start_area.txt");
+        level.LevelLoader.LevelData data = level.LevelLoader.loadLevel("res/maps/area1.txt");
         if (data != null) {
             this.tileMap = data.tileMap;
             // Handle player if loaded from map
@@ -187,10 +179,6 @@ public class Game extends JPanel implements ActionListener {
             // Fallback or error handling
             System.err.println("Failed to load level.");
         }
-    }
-
-    private void createTestItems() {
-        // TODO
     }
 
     // =====================================================

@@ -1,7 +1,6 @@
 package geometry;
 
 import core.Vector2;
-import core.GameConstants;
 import java.awt.Graphics2D;
 import java.awt.Color;
 

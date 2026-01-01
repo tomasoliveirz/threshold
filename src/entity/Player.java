@@ -117,10 +117,6 @@ public class Player extends Entity {
         this.velocity = new Vector2(newVx, newVy);
     }
 
-    private Vector2 processInput() {
-        return Vector2.ZERO; // Not used directly anymore
-    }
-
     // =====================================================
     // RENDERING
     // =====================================================
